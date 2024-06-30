@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>istagem de busca de vídeos</title>
+  <title>Listagem de busca de vídeos</title>
 
   <link rel="stylesheet" href="./index.css">
   <script> var exports = {} </script>
@@ -17,15 +17,25 @@
 </head>
 <body>
   <div class="nav-menu">
+    <div class="logo">
+      <h1>Vídeos</h1>   
+    </div>
     <div class="search-bar">
       <input type="text" name="search" id="search" placeholder="Pesquisar">
-      <i class="fa-solid fa-search search" id="search"></i>
+      <i class="fa-solid fa-search search"></i>
     </div>
   </div>
+  <div id="video-container">
+    <iframe
+      id="video"
+      src="https://www.youtube.com/embed/:id?autoplay=1&mute=1"
+      frameborder="0"
+      onresize="resizeIframe(this)"
+      allowfullscreen
+    ></iframe>
+  </div>
   <div class="container">
-    <div id="videos">
-
-    </div>
+    <div id="videos"></div>
   </div>
 </body>
 </html>
