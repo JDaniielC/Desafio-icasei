@@ -1,5 +1,4 @@
 export interface IVideo {
-  channelIcon: string
   id: string
   thumbnail: string
   title: string
