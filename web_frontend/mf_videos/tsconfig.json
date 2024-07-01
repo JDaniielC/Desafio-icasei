@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "lib": ["es2015", "dom"],
     "rootDir": "src/scripts",
-    "outDir": "."
+    "outDir": "src/"
   },
   "exclude": [
     "node_modules"

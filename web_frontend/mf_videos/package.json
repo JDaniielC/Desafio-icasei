@@ -4,7 +4,7 @@
   "description": "iCasei projetct",
   "main": "src/scripts/index.ts",
   "scripts": {
-    "build-dev": "npx tsc && npx sass src/styles/index.scss ./index.css",
+    "build-dev": "npx tsc && npx sass src/styles/index.scss src/index.css",
     "build": "npx tsc --outDir ./dist && npx sass src/styles/index.scss ./dist/index.css",
     "test": "npm run test"
   },

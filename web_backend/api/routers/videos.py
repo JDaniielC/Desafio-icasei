@@ -46,7 +46,6 @@ async def search_videos_route(query: str):
             id=video_id,
             title=title,
             channelId=video.channelId,
-            channelIcon=video.channelId,
             thumbnail=thumbnail,
             channelTitle=channel_title,
             description=description,
