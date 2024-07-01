@@ -127,12 +127,11 @@ img {
 
   #videos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     animation: fadeIn .3s;
 
     .video {
-      width: 16rem;
+      width: 20rem;
       padding: .2rem;
       overflow: hidden;
       object-fit: cover;
@@ -145,16 +144,9 @@ img {
 
       .info {
         display: flex;
-        gap: 1rem;
-
-        img {
-          border-radius: 50%;
-          width: 2.5rem;
-          height: 2.5rem;
-        }
         
         p {
-          height: 2.5rem;
+          height: 1.3rem;
           overflow: hidden;
           width: 100%;
         }
@@ -163,7 +155,6 @@ img {
       .channel-title {
         color: #979797;
         font-size: .9rem;
-        margin-left: 3.5rem;
       }
     }
   }

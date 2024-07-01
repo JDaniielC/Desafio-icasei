@@ -5,7 +5,6 @@ class VideoPublic(BaseModel):
     title: str
     channelId: str
     thumbnail: str
-    channelIcon: str
     channelTitle: str
     description: str
 

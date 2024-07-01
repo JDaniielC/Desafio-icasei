@@ -2,10 +2,10 @@
   "name": "mf_videos",
   "version": "1.0.0",
   "description": "iCasei projetct",
-  "main": "assets/scripts/index.ts",
+  "main": "src/scripts/index.ts",
   "scripts": {
-    "build-dev": "npx tsc && npx sass assets/styles/index.scss ./index.css",
-    "build": "npx tsc --outDir ./dist && npx sass assets/styles/index.scss ./dist/index.css",
+    "build-dev": "npx tsc && npx sass src/styles/index.scss src/index.css",
+    "build": "npx tsc --outDir ./dist && npx sass src/styles/index.scss ./dist/index.css",
     "test": "npm run test"
   },
   "repository": {
