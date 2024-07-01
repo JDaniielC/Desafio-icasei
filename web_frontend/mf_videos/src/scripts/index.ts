@@ -64,7 +64,7 @@ function treatData(data: IVideoResponse) {
   }
 }
 
-const apiUrl = "http://localhost:8000/api/v1"
+const apiUrl = "/api"
 
 fetch(`${apiUrl}/videos?query=icasei`)
   .then(res => res.json()).then(treatData)
