@@ -1,0 +1,30 @@
+{
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 1
+  },
+  "nextPageToken": "next-page-token",
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "teste",
+      "id": {
+        "kind": "video-kind",
+        "videoId": "video-id",
+        "channelId": "channel-id",
+        "playlistId": "playlist-id"
+      },
+      "snippet": {
+        "channelId": "channel-id",
+        "title": "video-title",
+        "description": "video-description",
+        "thumbnails": {
+          "medium": {
+            "url": "video-url"
+          }
+        },
+        "channelTitle": "channel-title"
+      }
+    }
+  ]
+}
