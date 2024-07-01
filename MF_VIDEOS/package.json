@@ -4,7 +4,8 @@
   "description": "iCasei projetct",
   "main": "assets/scripts/index.ts",
   "scripts": {
-    "build": "npx tsc && npx sass assets/styles/index.scss ./index.css",
+    "build-dev": "npx tsc && npx sass assets/styles/index.scss ./index.css",
+    "build": "npx tsc --outDir ./dist && npx sass assets/styles/index.scss ./dist/index.css",
     "test": "npm run test"
   },
   "repository": {
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/JDaniielC/Desafio-icasei#readme",
   "devDependencies": {
+    "@types/node": "^20.14.9",
     "sass": "^1.77.6",
     "typescript": "^5.5.2"
   }
