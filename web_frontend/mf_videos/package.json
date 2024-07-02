@@ -2,10 +2,12 @@
   "name": "mf_videos",
   "version": "1.0.0",
   "description": "iCasei projetct",
+  "type": "module",
   "main": "src/scripts/index.ts",
   "scripts": {
-    "build-dev": "npx tsc && npx sass src/styles/index.scss src/index.css",
-    "build": "npx tsc --outDir ./dist && npx sass src/styles/index.scss ./dist/index.css",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "npm run test"
   },
   "repository": {
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@types/node": "^20.14.9",
     "sass": "^1.77.6",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "vite": "^5.3.2"
   }
 }
