@@ -8,6 +8,8 @@ class VideosPage {
   private videoIframe: HTMLIFrameElement;
   private searchInput: HTMLInputElement;
   private drawerButton: HTMLElement;
+  private videoInfoTemplate: HTMLTemplateElement;
+  private videoTemplate: HTMLTemplateElement;
   private drawer: HTMLElement;
 
   constructor() {
@@ -17,6 +19,8 @@ class VideosPage {
     this.searchInput = document.getElementById('search') as HTMLInputElement
     this.drawerButton = document.getElementById('drawer') as HTMLElement
     this.drawer = document.getElementById('nav-menu') as HTMLElement
+    this.videoInfoTemplate = document.getElementById('video-info-template') as HTMLTemplateElement
+    this.videoTemplate = document.getElementById('video-template') as HTMLTemplateElement
 
     this.onInit()  
   } 
@@ -51,17 +55,16 @@ class VideosPage {
   private createVideoInfo(video: IVideo) {
     this.removeVideoInfo()
 
-    let videoInfo = document.createElement('div')
-    videoInfo.className = 'video-info'
-    videoInfo.innerHTML = `
-      <div class="info">
-        <div>
-          <h1>${video.title}</h1>
-          <p class="channel-title">${video.channelTitle}</p>
-        </div>
-      </div>
-      <p>${video.description}</p>
-    `
+    const clone = this.videoInfoTemplate.content.cloneNode(true) as HTMLElement
+    const videoInfo = clone.querySelector('.video-info') as HTMLElement
+    const title = clone.querySelector('h1') as HTMLElement
+    const channelTitle = clone.querySelector('.channel-title') as HTMLElement
+    const description = clone.querySelector('p') as HTMLElement
+
+    title.innerText = video.title
+    channelTitle.innerText = video.channelTitle
+    description.innerText = video.description
+    
     return videoInfo
   }
 
@@ -77,20 +80,18 @@ class VideosPage {
   }
 
   private createVideoElement(video: IVideo) {
-    const videoElement = document.createElement('div')
-    videoElement.className = 'video'
-    videoElement.onclick = () => this.openVideo(video);
-    videoElement.innerHTML = `
-      <img
-        class="thumbnail"
-        src="${video.thumbnail}"
-        alt="${video.title}"
-      >
-      <div class="info">
-        <p>${video.title}</p>
-      </div>
-      <p class="channel-title">${video.channelTitle}</p>
-    `
+    const clone = this.videoTemplate.content.cloneNode(true) as HTMLElement
+    const videoElement = clone.querySelector('.video') as HTMLElement
+    const thumbnail = clone.querySelector('img') as HTMLImageElement
+    const info = clone.querySelector('.info') as HTMLElement
+    const channelTitle = clone.querySelector('.channel-title') as HTMLElement
+
+    thumbnail.src = video.thumbnail
+    thumbnail.alt = video.title
+    info.querySelector('p')!.innerText = video.title
+    channelTitle.innerText = video.channelTitle
+
+    videoElement.onclick = () => this.openVideo(video)
     return videoElement
   }
 
