@@ -11,6 +11,7 @@ class VideosPage {
   private videoInfoTemplate: HTMLTemplateElement;
   private videoTemplate: HTMLTemplateElement;
   private drawer: HTMLElement;
+  private main: HTMLElement;
 
   constructor() {
     this.videosContainer = document.getElementById('videos') as HTMLElement
@@ -19,6 +20,7 @@ class VideosPage {
     this.searchInput = document.getElementById('search') as HTMLInputElement
     this.drawerButton = document.getElementById('drawer') as HTMLElement
     this.drawer = document.getElementById('nav-menu') as HTMLElement
+    this.main = document.querySelector('main') as HTMLElement
     this.videoInfoTemplate = document.getElementById('video-info-template') as HTMLTemplateElement
     this.videoTemplate = document.getElementById('video-template') as HTMLTemplateElement
 
@@ -37,6 +39,7 @@ class VideosPage {
 
   private toggleDrawer() {
     this.drawer.classList.toggle('active')
+    this.main.classList.toggle('drawer-switched')
   }
 
   private searchVideos() {
