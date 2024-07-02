@@ -8,6 +8,14 @@ const videoIframe: HTMLIFrameElement = document.getElementById('video') as HTMLI
 
 const searchInput: HTMLInputElement = document.getElementById('search') as HTMLInputElement
 
+const drawerButton: HTMLElement = document.getElementById('drawer') as HTMLElement
+
+const drawer: HTMLElement = document.getElementById('nav-menu') as HTMLElement
+
+drawerButton.onclick = () => {
+  drawer.classList.toggle('active')
+}
+
 function createVideoInfo(video: IVideo) {
   document.querySelectorAll('.video-info').forEach(
     (info: Element) => info.remove()
