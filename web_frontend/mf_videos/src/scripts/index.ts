@@ -13,6 +13,8 @@ class VideosPage {
   private drawer: HTMLElement;
   private main: HTMLElement;
 
+  private favoriteVideosId: string[] = []
+
   constructor() {
     this.videosContainer = document.getElementById('videos') as HTMLElement
     this.videoContainer = document.getElementById('video-container') as HTMLElement
@@ -35,6 +37,23 @@ class VideosPage {
     )
 
     this.fetchVideos('icasei')
+    this.getFavoriteVideos()
+  }
+
+  private removeFavoriteVideo(videoId: string) {
+    this.favoriteVideosId = this.favoriteVideosId.filter(
+      (id) => id !== videoId
+    )
+    localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
+  }
+
+  private getFavoriteVideos() {
+    this.favoriteVideosId = JSON.parse(localStorage.getItem('favoriteVideos') || '[]')
+  }
+
+  private saveFavoriteVideo(videoId: string) {
+    this.favoriteVideosId.push(videoId)
+    localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
   }
 
   private toggleDrawer() {
@@ -90,6 +109,10 @@ class VideosPage {
     const info = clone.querySelector('.info') as HTMLElement
     const channelTitle = clone.querySelector('.channel-title') as HTMLElement
 
+    if (this.favoriteVideosId.includes(video.id)) {
+      star.className = 'fa-solid fa-star'
+    }
+
     thumbnail.src = video.thumbnail
     thumbnail.alt = video.title
     info.querySelector('p')!.innerText = video.title
@@ -97,6 +120,12 @@ class VideosPage {
     star.onclick = ($event) => {
       star.className = star.className === 'fa-regular fa-star'
         ? 'fa-solid fa-star' : 'fa-regular fa-star'
+      
+      if (star.className === 'fa-solid fa-star') {
+        this.saveFavoriteVideo(video.id)
+      } else {
+        this.removeFavoriteVideo(video.id)
+      }
 
       $event.stopPropagation()
     }
