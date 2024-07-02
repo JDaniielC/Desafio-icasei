@@ -84,6 +84,7 @@ class VideosPage {
 
   private createVideoElement(video: IVideo) {
     const clone = this.videoTemplate.content.cloneNode(true) as HTMLElement
+    const star = clone.querySelector('i') as HTMLElement
     const videoElement = clone.querySelector('.video') as HTMLElement
     const thumbnail = clone.querySelector('img') as HTMLImageElement
     const info = clone.querySelector('.info') as HTMLElement
@@ -93,6 +94,12 @@ class VideosPage {
     thumbnail.alt = video.title
     info.querySelector('p')!.innerText = video.title
     channelTitle.innerText = video.channelTitle
+    star.onclick = ($event) => {
+      star.className = star.className === 'fa-regular fa-star'
+        ? 'fa-solid fa-star' : 'fa-regular fa-star'
+
+      $event.stopPropagation()
+    }
 
     videoElement.onclick = () => this.openVideo(video)
     return videoElement

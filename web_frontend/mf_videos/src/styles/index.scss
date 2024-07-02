@@ -214,6 +214,13 @@ main {
         overflow: hidden;
         object-fit: cover;
         border: none;
+
+        i.fa-star {
+          position: absolute;
+          font-size: 2rem;
+          margin: .3rem;
+          cursor: pointer;
+        }
   
         .thumnail {
           height: 15rem;
