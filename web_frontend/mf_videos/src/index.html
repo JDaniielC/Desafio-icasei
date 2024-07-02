@@ -6,36 +6,70 @@
 
   <title>Listagem de busca de vídeos</title>
 
-  <link rel="stylesheet" href="./index.css">
-  <script> var exports = {} </script>
-  <script src="./index.js" defer></script>
-
+  <script type="module" src="scripts/index.ts"></script>
+  <script type="module" src="styles/index.scss"></script>
   <script src="https://kit.fontawesome.com/b94f5696ce.js" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="nav-menu">
-    <div class="logo">
-      <h1>Vídeos</h1>   
+  <header>
+    <div id="header-container">
+      <i class="fa-solid fa-bars" id="drawer"></i>
+      <div class="logo">
+        <h1>Vídeos</h1>   
+      </div>
+      <div class="search-bar">
+        <input type="text" name="search" id="search" placeholder="Pesquisar">
+        <i class="fa-solid fa-search search"></i>
+      </div>
     </div>
-    <div class="search-bar">
-      <input type="text" name="search" id="search" placeholder="Pesquisar">
-      <i class="fa-solid fa-search search"></i>
+  </header>
+  <div id="nav-menu" class="active">
+    <ul>
+      <li><a href="/">Vídeos</a></li>
+      <li><a href="/favorites">Favoritos</a></li>
+    </ul>
+  </div>
+  <main class="drawer-switched">
+    <div id="video-container">
+      <iframe
+        id="video"
+        src="https://www.youtube.com/embed/:id?autoplay=1&mute=1"
+        frameborder="0"
+        onresize="resizeIframe(this)"
+        allowfullscreen
+      ></iframe>
     </div>
-  </div>
-  <div id="video-container">
-    <iframe
-      id="video"
-      src="https://www.youtube.com/embed/:id?autoplay=1&mute=1"
-      frameborder="0"
-      onresize="resizeIframe(this)"
-      allowfullscreen
-    ></iframe>
-  </div>
-  <div class="container">
-    <div id="videos"></div>
-  </div>
+    <div class="container">
+      <div id="videos"></div>
+    </div>
+  </main>
+
+  <!-- Templates -->
+
+  <template id="video-info-template">
+    <div class="video-info">
+      <div class="info">
+        <div>
+          <h1></h1>
+          <p class="channel-title"></p>
+        </div>
+      </div>
+      <p></p>
+    </div>
+  </template>
+
+  <template id="video-template">
+    <div class="video">
+      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
+      <img src="" alt="" class="thumbnail">
+      <div class="info">
+        <p></p>
+      </div>
+      <p class="channel-title"></p>
+    </div>
+  </template>
 </body>
 </html>

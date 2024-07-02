@@ -1,88 +1,154 @@
 import { IVideo, IVideoResponse } from "./types/video";
-
-const videosContainer: HTMLElement = document.getElementById('videos') as HTMLElement
-
-const videoContainer: HTMLElement = document.getElementById('video-container') as HTMLElement
-
-const videoIframe: HTMLIFrameElement = document.getElementById('video') as HTMLIFrameElement
-
-const searchInput: HTMLInputElement = document.getElementById('search') as HTMLInputElement
-
-function createVideoInfo(video: IVideo) {
-  document.querySelectorAll('.video-info').forEach(
-    (info: Element) => info.remove()
-  )
-
-  let videoInfo = document.createElement('div')
-  videoInfo.className = 'video-info'
-  videoInfo.innerHTML = `
-    <div class="info">
-      <div>
-        <h1>${video.title}</h1>
-        <p class="channel-title">${video.channelTitle}</p>
-      </div>
-    </div>
-    <p>${video.description}</p>
-  `
-  return videoInfo
-}
-
-function openVideo(video: IVideo) {
-  videoIframe.src = videoIframe.src.replace(':id', video.id)
-  videoContainer.style.display = 'block'
-  videosContainer.style.display = 'none'
-  videoContainer.appendChild(createVideoInfo(video))
-}
-
-function createVideoElement(video: IVideo) {
-  let videoElement = document.createElement('div')
-  videoElement.className = 'video'
-  videoElement.onclick = () => openVideo(video);
-  videoElement.innerHTML = `
-    <img
-      class="thumbnail"
-      src="${video.thumbnail}"
-      alt="${video.title}"
-    >
-    <div class="info">
-      <p>${video.title}</p>
-    </div>
-    <p class="channel-title">${video.channelTitle}</p>
-  `
-  return videoElement
-}
-
-function treatData(data: IVideoResponse) {
-  try {
-    videosContainer.innerHTML = ''
-    const videos: IVideo[] = data.videos
-    videos.forEach(video => {
-      videosContainer.appendChild(createVideoElement(video))
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
+import debouce from "./utils/debouce";
 
 const apiUrl = "/api"
+class VideosPage {
+  private videosContainer: HTMLElement;
+  private videoContainer: HTMLElement;
+  private videoIframe: HTMLIFrameElement;
+  private searchInput: HTMLInputElement;
+  private drawerButton: HTMLElement;
+  private videoInfoTemplate: HTMLTemplateElement;
+  private videoTemplate: HTMLTemplateElement;
+  private drawer: HTMLElement;
+  private main: HTMLElement;
 
-fetch(`${apiUrl}/videos?query=icasei`)
-  .then(res => res.json()).then(treatData)
+  private favoriteVideosId: string[] = []
 
-const debouce = (fn: Function, delay: number) => {
-  let timeout: number
-  return (...args: any) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(
-      () => fn(...args), delay
-    ) as unknown as number
+  constructor() {
+    this.videosContainer = document.getElementById('videos') as HTMLElement
+    this.videoContainer = document.getElementById('video-container') as HTMLElement
+    this.videoIframe = document.getElementById('video') as HTMLIFrameElement
+    this.searchInput = document.getElementById('search') as HTMLInputElement
+    this.drawerButton = document.getElementById('drawer') as HTMLElement
+    this.drawer = document.getElementById('nav-menu') as HTMLElement
+    this.main = document.querySelector('main') as HTMLElement
+    this.videoInfoTemplate = document.getElementById('video-info-template') as HTMLTemplateElement
+    this.videoTemplate = document.getElementById('video-template') as HTMLTemplateElement
+
+    this.onInit()  
+  } 
+
+  private onInit() {
+    // Initialize event listeners
+    this.drawerButton.onclick = () => this.toggleDrawer()
+    this.searchInput.onkeyup = debouce(
+      () => this.searchVideos(), 250
+    )
+
+    this.fetchVideos('icasei')
+    this.getFavoriteVideos()
+  }
+
+  private removeFavoriteVideo(videoId: string) {
+    this.favoriteVideosId = this.favoriteVideosId.filter(
+      (id) => id !== videoId
+    )
+    localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
+  }
+
+  private getFavoriteVideos() {
+    this.favoriteVideosId = JSON.parse(localStorage.getItem('favoriteVideos') || '[]')
+  }
+
+  private saveFavoriteVideo(videoId: string) {
+    this.favoriteVideosId.push(videoId)
+    localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
+  }
+
+  private toggleDrawer() {
+    this.drawer.classList.toggle('active')
+    this.main.classList.toggle('drawer-switched')
+  }
+
+  private searchVideos() {
+    this.videoContainer.style.display = 'none'
+    this.videosContainer.style.display = 'grid'
+    const searchValue = this.searchInput.value.toLowerCase()
+    this.fetchVideos(searchValue)
+  }
+
+  private removeVideoInfo() {
+    document.querySelectorAll('.video-info').forEach(
+      (info: Element) => info.remove()
+    )
+  }
+
+  private createVideoInfo(video: IVideo) {
+    this.removeVideoInfo()
+
+    const clone = this.videoInfoTemplate.content.cloneNode(true) as HTMLElement
+    const videoInfo = clone.querySelector('.video-info') as HTMLElement
+    const title = clone.querySelector('h1') as HTMLElement
+    const channelTitle = clone.querySelector('.channel-title') as HTMLElement
+    const description = clone.querySelector('p') as HTMLElement
+
+    title.innerText = video.title
+    channelTitle.innerText = video.channelTitle
+    description.innerText = video.description
+    
+    return videoInfo
+  }
+
+  private openVideo(video: IVideo) {
+    this.videoIframe.src = this.videoIframe.src.replace(
+      ':id', video.id
+    )
+    this.videoContainer.style.display = 'block'
+    this.videosContainer.style.display = 'none'
+    this.videoContainer.appendChild(
+      this.createVideoInfo(video)
+    )
+  }
+
+  private createVideoElement(video: IVideo) {
+    const clone = this.videoTemplate.content.cloneNode(true) as HTMLElement
+    const star = clone.querySelector('i') as HTMLElement
+    const videoElement = clone.querySelector('.video') as HTMLElement
+    const thumbnail = clone.querySelector('img') as HTMLImageElement
+    const info = clone.querySelector('.info') as HTMLElement
+    const channelTitle = clone.querySelector('.channel-title') as HTMLElement
+
+    if (this.favoriteVideosId.includes(video.id)) {
+      star.className = 'fa-solid fa-star'
+    }
+
+    thumbnail.src = video.thumbnail
+    thumbnail.alt = video.title
+    info.querySelector('p')!.innerText = video.title
+    channelTitle.innerText = video.channelTitle
+    star.onclick = ($event) => {
+      star.className = star.className === 'fa-regular fa-star'
+        ? 'fa-solid fa-star' : 'fa-regular fa-star'
+      
+      if (star.className === 'fa-solid fa-star') {
+        this.saveFavoriteVideo(video.id)
+      } else {
+        this.removeFavoriteVideo(video.id)
+      }
+
+      $event.stopPropagation()
+    }
+
+    videoElement.onclick = () => this.openVideo(video)
+    return videoElement
+  }
+
+  private fetchVideos(query: string) {
+    fetch(`${apiUrl}/videos?query=${query}`)
+      .then(res => res.json()).then((data: IVideoResponse) => {
+        try {
+          this.videosContainer.innerHTML = ''
+          const videos: IVideo[] = data.videos
+          videos.forEach(video => {
+            this.videosContainer.appendChild(this.createVideoElement(video))
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    )
   }
 }
 
-searchInput.onkeyup = debouce(() => {
-  videoContainer.style.display = 'none'
-  videosContainer.style.display = 'grid'
-  const searchValue = searchInput.value.toLowerCase()
-  fetch(`${apiUrl}/videos?query=${searchValue}`)
-    .then(res => res.json()).then(treatData)
-}, 250);
+new VideosPage()
