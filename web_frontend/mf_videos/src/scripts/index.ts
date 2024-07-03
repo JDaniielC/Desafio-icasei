@@ -2,63 +2,66 @@ import { IVideo, IVideoResponse } from "./types/video";
 import debouce from "./utils/debouce";
 
 const apiUrl = "/api"
-class VideosPage {
-  private videosContainer: HTMLElement;
-  private videoContainer: HTMLElement;
-  private videoIframe: HTMLIFrameElement;
-  private searchInput: HTMLInputElement;
-  private drawerButton: HTMLElement;
-  private videoInfoTemplate: HTMLTemplateElement;
-  private videoTemplate: HTMLTemplateElement;
-  private drawer: HTMLElement;
-  private main: HTMLElement;
+export class VideosPage {
+  videoContainer: HTMLElement;
+  videosContainer: HTMLElement;
+  searchInput: HTMLInputElement;
+  videoIframe: HTMLIFrameElement;
+  videoTemplate: HTMLTemplateElement;
+  videoInfoTemplate: HTMLTemplateElement;
 
-  private favoriteVideosId: string[] = []
+  favoriteVideosId: string[] = []
+  FIRST_VIDEO_SEARCH = 'icasei'
 
   constructor() {
-    this.videosContainer = document.getElementById('videos') as HTMLElement
-    this.videoContainer = document.getElementById('video-container') as HTMLElement
-    this.videoIframe = document.getElementById('video') as HTMLIFrameElement
-    this.searchInput = document.getElementById('search') as HTMLInputElement
-    this.drawerButton = document.getElementById('drawer') as HTMLElement
-    this.drawer = document.getElementById('nav-menu') as HTMLElement
-    this.main = document.querySelector('main') as HTMLElement
-    this.videoInfoTemplate = document.getElementById('video-info-template') as HTMLTemplateElement
-    this.videoTemplate = document.getElementById('video-template') as HTMLTemplateElement
+    this.videosContainer = this.getElementById('videos') as HTMLElement
+    this.videoContainer = this.getElementById('video-container') as HTMLElement
+    this.videoIframe = this.getElementById('video') as HTMLIFrameElement
+    this.searchInput = this.getElementById('search') as HTMLInputElement
+    this.videoTemplate = this.getElementById('video-template') as HTMLTemplateElement
+    this.videoInfoTemplate = this.getElementById('video-info-template') as HTMLTemplateElement
 
     this.onInit()  
   } 
 
-  private onInit() {
-    // Initialize event listeners
-    this.drawerButton.onclick = () => this.toggleDrawer()
+  getElementById(id: string) {
+    return document.getElementById(id)
+  }
+
+  onInit() {
+    this.getFavoriteVideos()
+    this.fetchVideos(this.FIRST_VIDEO_SEARCH)
+
+    if (this.searchInput == null) {
+      throw new Error('Search input not found')
+    }
+    if (this.videoContainer == null) {
+      throw new Error('Video container not found')
+    }
+    if (this.videosContainer == null) {
+      throw new Error('Videos container not found')
+    }
     this.searchInput.onkeyup = debouce(
       () => this.searchVideos(), 250
     )
-
-    this.fetchVideos('icasei')
-    this.getFavoriteVideos()
   }
 
-  private removeFavoriteVideo(videoId: string) {
+  removeFavoriteVideo(videoId: string) {
     this.favoriteVideosId = this.favoriteVideosId.filter(
       (id) => id !== videoId
     )
     localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
   }
 
-  private getFavoriteVideos() {
-    this.favoriteVideosId = JSON.parse(localStorage.getItem('favoriteVideos') || '[]')
+  getFavoriteVideos() {
+    this.favoriteVideosId = JSON.parse(
+      localStorage.getItem('favoriteVideos') ?? '[]'
+    )
   }
 
-  private saveFavoriteVideo(videoId: string) {
+  saveFavoriteVideo(videoId: string) {
     this.favoriteVideosId.push(videoId)
     localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
-  }
-
-  private toggleDrawer() {
-    this.drawer.classList.toggle('active')
-    this.main.classList.toggle('drawer-switched')
   }
 
   private searchVideos() {
@@ -76,6 +79,10 @@ class VideosPage {
 
   private createVideoInfo(video: IVideo) {
     this.removeVideoInfo()
+
+    if (this.videoInfoTemplate == null) {
+      throw new Error('Video info template not found')
+    }
 
     const clone = this.videoInfoTemplate.content.cloneNode(true) as HTMLElement
     const videoInfo = clone.querySelector('.video-info') as HTMLElement
@@ -102,6 +109,9 @@ class VideosPage {
   }
 
   private createVideoElement(video: IVideo) {
+    if (this.videoTemplate == null) {
+      throw new Error('Video template not found')
+    }
     const clone = this.videoTemplate.content.cloneNode(true) as HTMLElement
     const star = clone.querySelector('i') as HTMLElement
     const videoElement = clone.querySelector('.video') as HTMLElement
