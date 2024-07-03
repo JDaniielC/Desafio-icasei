@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Drawer</title>
+
+  <script type="module" src="scripts/index.ts"></script>
+  <script type="module" src="styles/index.scss"></script>
+  <script src="https://kit.fontawesome.com/b94f5696ce.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div id="header-container">
+      <button title="Botão para menu" id="drawer-button">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="logo">
+        <h1>iCasei YT</h1>   
+      </div>
+    </div>
+  </header>
+  <div id="nav-menu" class="active">
+    <ul>
+      <li><a href="/">Vídeos</a></li>
+      <li id="favorite-link">
+        <a href="/favorites">Favoritos</a>
+        <span id="favorite-count"></span>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
