@@ -11,7 +11,6 @@ RUN npm run build
 RUN rm /etc/nginx/sites-enabled/default
 COPY nginx.conf /etc/nginx/sites-enabled/
 
-RUN cp -r index.html dist/
 RUN cp -r dist/* /var/www/html
 
 EXPOSE 80
