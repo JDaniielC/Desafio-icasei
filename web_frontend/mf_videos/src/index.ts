@@ -32,7 +32,7 @@ export class VideosPage {
 
   onInit() {
     this.getFavoriteVideos()
-    api.fetchFavoriteVideos(this.favoriteVideosId).then(
+    api.fetchVideos('icasei').then(
       (videos) => this.renderVideoList(videos)
     )
 
@@ -68,7 +68,7 @@ export class VideosPage {
     localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
   }
 
-  private searchVideos() {
+  searchVideos() {
     this.videoContainer.style.display = 'none'
     this.videosContainer.style.display = 'grid'
     const searchValue = this.searchInput.value.toLowerCase()
@@ -77,7 +77,7 @@ export class VideosPage {
     )
   }
 
-  private removeVideoInfo() {
+  removeVideoInfo() {
     document.querySelectorAll('.video-info').forEach(
       (info: Element) => info.remove()
     )
@@ -90,7 +90,7 @@ export class VideosPage {
     })
   }
 
-  private createVideoInfo(video: IVideo) {
+  createVideoInfo(video: IVideo) {
     this.removeVideoInfo()
 
     if (this.videoInfoTemplate == null) {
@@ -110,7 +110,7 @@ export class VideosPage {
     return videoInfo
   }
 
-  private openVideo(video: IVideo) {
+  openVideo(video: IVideo) {
     this.videoIframe.src = this.videoIframe.src.replace(
       ':id', video.id
     )
@@ -121,7 +121,7 @@ export class VideosPage {
     )
   }
 
-  private createVideoElement(video: IVideo) {
+  createVideoElement(video: IVideo) {
     if (this.videoTemplate == null) {
       throw new Error('Video template not found')
     }
