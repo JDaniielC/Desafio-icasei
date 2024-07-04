@@ -1,7 +1,7 @@
-import { IVideo, IVideoResponse } from "./types/video";
+import { IVideo } from "./types/video";
+import { api, apiService } from "./services/api";
 import debouce from "./utils/debouce";
 
-const apiUrl = "/api"
 export class VideosPage {
   videoContainer: HTMLElement;
   videosContainer: HTMLElement;
@@ -12,8 +12,10 @@ export class VideosPage {
 
   favoriteVideosId: string[] = []
   FIRST_VIDEO_SEARCH = 'icasei'
+  api: apiService
 
   constructor() {
+    this.api = api
     this.videosContainer = this.getElementById('videos') as HTMLElement
     this.videoContainer = this.getElementById('video-container') as HTMLElement
     this.videoIframe = this.getElementById('video') as HTMLIFrameElement
@@ -30,7 +32,9 @@ export class VideosPage {
 
   onInit() {
     this.getFavoriteVideos()
-    this.fetchVideos(this.FIRST_VIDEO_SEARCH)
+    api.fetchVideos('icasei').then(
+      (videos) => this.renderVideoList(videos)
+    )
 
     if (this.searchInput == null) {
       throw new Error('Search input not found')
@@ -44,7 +48,7 @@ export class VideosPage {
     this.searchInput.onkeyup = debouce(
       () => this.searchVideos(), 250
     )
-  }
+  } 
 
   removeFavoriteVideo(videoId: string) {
     this.favoriteVideosId = this.favoriteVideosId.filter(
@@ -64,20 +68,29 @@ export class VideosPage {
     localStorage.setItem('favoriteVideos', JSON.stringify(this.favoriteVideosId))
   }
 
-  private searchVideos() {
+  searchVideos() {
     this.videoContainer.style.display = 'none'
     this.videosContainer.style.display = 'grid'
     const searchValue = this.searchInput.value.toLowerCase()
-    this.fetchVideos(searchValue)
+    api.fetchVideos(searchValue).then(
+      (videos) => this.renderVideoList(videos)
+    )
   }
 
-  private removeVideoInfo() {
+  removeVideoInfo() {
     document.querySelectorAll('.video-info').forEach(
       (info: Element) => info.remove()
     )
   }
 
-  private createVideoInfo(video: IVideo) {
+  renderVideoList(videos: IVideo[]) {
+    this.videosContainer.innerHTML = ''
+    videos.forEach(video => {
+      this.videosContainer.appendChild(this.createVideoElement(video))
+    })
+  }
+
+  createVideoInfo(video: IVideo) {
     this.removeVideoInfo()
 
     if (this.videoInfoTemplate == null) {
@@ -97,7 +110,7 @@ export class VideosPage {
     return videoInfo
   }
 
-  private openVideo(video: IVideo) {
+  openVideo(video: IVideo) {
     this.videoIframe.src = this.videoIframe.src.replace(
       ':id', video.id
     )
@@ -108,7 +121,7 @@ export class VideosPage {
     )
   }
 
-  private createVideoElement(video: IVideo) {
+  createVideoElement(video: IVideo) {
     if (this.videoTemplate == null) {
       throw new Error('Video template not found')
     }
@@ -142,22 +155,6 @@ export class VideosPage {
 
     videoElement.onclick = () => this.openVideo(video)
     return videoElement
-  }
-
-  private fetchVideos(query: string) {
-    fetch(`${apiUrl}/videos?query=${query}`)
-      .then(res => res.json()).then((data: IVideoResponse) => {
-        try {
-          this.videosContainer.innerHTML = ''
-          const videos: IVideo[] = data.videos
-          videos.forEach(video => {
-            this.videosContainer.appendChild(this.createVideoElement(video))
-          })
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    )
   }
 }
 

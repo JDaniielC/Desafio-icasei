@@ -9,13 +9,13 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "lib": ["es2015", "dom"],
-    "rootDir": "src/scripts",
+    "rootDir": "src/",
     "outDir": "src/"
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "src/scripts/**/*.ts",
+    "src/**/*.ts", "src/index.ts",
   ]
 }

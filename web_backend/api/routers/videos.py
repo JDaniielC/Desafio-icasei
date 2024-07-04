@@ -1,7 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from http import HTTPStatus
 from api.schemas import VideoResponseSchema, YoutubeResponse, VideoPublic
-from api.utils import get_youtube_query
+from api.utils import (get_youtube_by_query,
+                       get_youtube_by_ids,
+                       format_youtube_response)
 import requests
 import json
 
@@ -11,12 +13,13 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=VideoResponseSchema)
-async def search_videos_route(query: str):
+async def search_videos_route(request: Request):
     """
     Search for videos on youtube by query and return a formated list of videos
 
     Args:
         query (str): The search query
+        filters (dict): The filters to apply to the search
 
     Returns:
         dict: A dictionary with a list of videos
@@ -24,34 +27,26 @@ async def search_videos_route(query: str):
     Raises:
         HTTPException: If the query is not provided
     """
-    if not query:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST,
-                            detail="Query is required")
 
-    response = requests.get(get_youtube_query(query))
+    query_params = dict(request.query_params)
+    query = query_params.get("query", None)
+    filters = query_params.get("filters", None)
+
+    if not (query or filters):
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST,
+                            detail="Param is required")
+
+    if (filters):
+        ids = json.loads(filters)
+        url = get_youtube_by_ids(ids)
+    else:
+        url = get_youtube_by_query(query)
+    response = requests.get(url)
     response = json.loads(response.text)
 
     response = YoutubeResponse(**response)
     
-    videos: list[VideoPublic] = list()
-    for item in response.items:
-        video = item.snippet
-        video_id = item.id.videoId
-        title = video.title
-        description = video.description
-        thumbnail = video.thumbnails.medium.url
-        channel_title = video.channelTitle
-
-        video_public = VideoPublic(
-            id=video_id,
-            title=title,
-            channelId=video.channelId,
-            thumbnail=thumbnail,
-            channelTitle=channel_title,
-            description=description,
-        )
-
-        videos.append(video_public)
+    videos: list[VideoPublic] = format_youtube_response(response)
 
     return {
         "videos": videos
