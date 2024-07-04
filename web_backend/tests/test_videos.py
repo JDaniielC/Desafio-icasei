@@ -41,4 +41,4 @@ def test_search_videos_empty_query(client):
     """
     response = client.get("/api/v1/videos?query=")
     assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response.json() == {"detail": "Query is required"}
+    assert response.json() == {"detail": "Param is required"}

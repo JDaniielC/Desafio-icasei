@@ -31,7 +31,7 @@ class VideoSnippet(BaseModel):
 class YoutubeResource(BaseModel):
     kind: str
     etag: str
-    id: VideoIdentification
+    id: VideoIdentification | str
     snippet: VideoSnippet
 
 class SearchPageInfo(BaseModel):
@@ -40,5 +40,5 @@ class SearchPageInfo(BaseModel):
 
 class YoutubeResponse(BaseModel):
     pageInfo: SearchPageInfo
-    nextPageToken: str
+    nextPageToken: str = None
     items: list[YoutubeResource]
