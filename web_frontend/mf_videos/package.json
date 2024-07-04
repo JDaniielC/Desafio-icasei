@@ -1,0 +1,35 @@
+{
+  "name": "mf_videos",
+  "version": "1.0.0",
+  "description": "iCasei project - Videos microfrontend",
+  "type": "module",
+  "main": "src/scripts/index.ts",
+  "scripts": {
+    "dev": "vite serve",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JDaniielC/Desafio-icasei.git"
+  },
+  "keywords": [
+    "videos"
+  ],
+  "author": "jdaniielc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JDaniielC/Desafio-icasei/issues"
+  },
+  "homepage": "https://github.com/JDaniielC/Desafio-icasei#readme",
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "sass": "^1.77.6",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.2"
+  },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "0.23.0",
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules
+*.js
+*.css
+*.map
+__pycache__
+.env
+dist
+.pytest_cache
+venv
+.coverage
+poetry.lock
