@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Listagem de vídeos favoritos</title>
+
+  <script type="module" src="./index.ts"></script>
+  <script type="module" src="../index.scss"></script>
+  <script src="https://kit.fontawesome.com/b94f5696ce.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main>
+    <div id="video-container">
+      <iframe
+        id="video"
+        src="https://www.youtube.com/embed/:id?autoplay=1&mute=1"
+        frameborder="0"
+        onresize="resizeIframe(this)"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <div class="container">
+      <div id="videos"></div>
+    </div>
+  </main>
+
+  <!-- Templates -->
+
+  <template id="video-info-template">
+    <div class="video-info">
+      <div class="info">
+        <div>
+          <h1></h1>
+          <p class="channel-title"></p>
+        </div>
+      </div>
+      <p></p>
+    </div>
+  </template>
+
+  <template id="video-template">
+    <div class="video">
+      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
+      <img src="" alt="" class="thumbnail">
+      <div class="info">
+        <p></p>
+      </div>
+      <p class="channel-title"></p>
+    </div>
+  </template>
+</body>
+</html>
